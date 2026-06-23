@@ -213,7 +213,7 @@ tr:hover td{background:#fafbff;}
   <div style="text-align:center;margin-bottom:20px">
     <div style="font-size:2rem;margin-bottom:8px" id="codIco">&#128274;</div>
     <div style="font-size:1.1rem;font-weight:700" id="codTit">Confirmar</div>
-    <div style="font-size:.82rem;color:var(--muted);margin-top:4px">Ingresa el codigo de seguridad</div>
+    
   </div>
   <div class="fi2" style="margin-bottom:8px"><label style="text-align:center;display:block">Codigo</label><input id="codIn" type="password" maxlength="6" placeholder="****" style="text-align:center;font-size:1.3rem;letter-spacing:8px" onkeydown="if(event.key==='Enter')confCod()"></div>
   <div style="color:var(--red);font-size:.82rem;text-align:center;min-height:18px;margin-bottom:16px" id="codErr"></div>
@@ -221,7 +221,7 @@ tr:hover td{background:#fafbff;}
 </div>
 </div>
 
-<div id="ub"><span id="ubMsg">Tarea eliminada</span><button class="ubtn" onclick="deshacer()">Deshacer</button><span class="ut" id="ubT">10s</span></div>
+
 <div id="toast"></div>
 
 <script>
@@ -240,7 +240,7 @@ var EQ = [
   {n:"Javier",r:"Digital",        e:"digital@novomode.ec",       c:"#e84393",b:"#fde8f3",i:"JA"}
 ];
 var SOL=[], ARC=[], fileSHA=null, lastHash=null, syncTmr=null;
-var undoStk=null, undoInt=null, pendAct=null, notId=null;
+var pendAct=null, notId=null;
 
 function leer() {
   return fetch(API + "?t=" + Date.now(), {
@@ -493,7 +493,7 @@ function guardarNotas(){
 }
 function pedirCod(tp,id){
   pendAct={tp:tp,id:id};
-  document.getElementById("codIco").textContent=tp==="eliminar"?"&#128465;":"&#128230;";
+  document.getElementById("codIco").textContent=tp==="eliminar"?"🗑":"📦";
   document.getElementById("codTit").textContent=tp==="eliminar"?"Eliminar tarea":"Archivar tarea";
   document.getElementById("codIn").value="";
   document.getElementById("codErr").textContent="";
@@ -515,32 +515,16 @@ function confCod(){
 function doEliminar(id){
   var idx=-1;SOL.forEach(function(x,i){if(String(x.id)===String(id))idx=i;});
   if(idx===-1)return;
-  var item=SOL[idx];SOL.splice(idx,1);renderAll();mostrarUndo(item,"eliminar");
+  SOL.splice(idx,1);renderAll();
+  saveRemote().then(function(){toast("Tarea eliminada","ok");});
 }
 function doArchivar(id){
   var idx=-1;SOL.forEach(function(x,i){if(String(x.id)===String(id))idx=i;});
   if(idx===-1)return;
   var item=JSON.parse(JSON.stringify(SOL[idx]));
   item.far=new Date().toLocaleDateString("es-EC",{day:"2-digit",month:"2-digit",year:"numeric"});
-  SOL.splice(idx,1);ARC.push(item);renderAll();mostrarUndo(item,"archivar");
-}
-function mostrarUndo(item,tp){
-  if(undoInt)clearInterval(undoInt);
-  undoStk={item:item,tp:tp};var seg=10;
-  document.getElementById("ubMsg").textContent=tp==="eliminar"?"Tarea eliminada":"Tarea archivada";
-  document.getElementById("ubT").textContent=seg+"s";
-  document.getElementById("ub").classList.add("show");
-  undoInt=setInterval(function(){
-    seg--;document.getElementById("ubT").textContent=seg+"s";
-    if(seg<=0){clearInterval(undoInt);document.getElementById("ub").classList.remove("show");undoStk=null;saveRemote();}
-  },1000);
-}
-function deshacer(){
-  if(!undoStk)return;
-  clearInterval(undoInt);document.getElementById("ub").classList.remove("show");
-  if(undoStk.tp==="eliminar")SOL.unshift(undoStk.item);
-  else{ARC=ARC.filter(function(x){return String(x.id)!==String(undoStk.item.id);});SOL.unshift(undoStk.item);}
-  undoStk=null;renderAll();toast("Accion deshecha","ok");
+  SOL.splice(idx,1);ARC.push(item);renderAll();
+  saveRemote().then(function(){toast("Tarea archivada","ok");});
 }
 var _t;
 function toast(msg,tp){
