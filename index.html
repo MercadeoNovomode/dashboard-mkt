@@ -257,18 +257,13 @@ function leer() {
 
 function guardarGH(data) {
   var content = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
-  // Get fresh SHA first to avoid conflicts
-  return fetch(API + "?t=" + Date.now(), {
-    headers: {"Authorization": "token " + GH_TOKEN, "Accept": "application/vnd.github.v3+json"}
-  }).then(function(r){ return r.json(); }).then(function(meta) {
-    fileSHA = meta.sha;
-    return fetch(API, {
-      method: "PUT",
-      headers: {"Authorization": "token " + GH_TOKEN, "Accept": "application/vnd.github.v3+json", "Content-Type": "application/json"},
-      body: JSON.stringify({message: "update", content: content, sha: fileSHA})
-    });
+  return fetch(API, {
+    method: "PUT",
+    headers: {"Authorization": "token " + GH_TOKEN, "Accept": "application/vnd.github.v3+json", "Content-Type": "application/json"},
+    body: JSON.stringify({message: "update", content: content, sha: fileSHA})
   }).then(function(r){ return r.json(); }).then(function(d){
-    if(d.content) fileSHA = d.content.sha;
+    if(d.content && d.content.sha) { fileSHA = d.content.sha; }
+    else if(d.message) { console.error("GH error:", d.message); }
   });
 }
 
@@ -290,12 +285,10 @@ function sync() {
 
 function saveRemote() {
   var data = {solicitudes:SOL, archivadas:ARC};
-  lastHash = JSON.stringify(data);
+  var snapshot = JSON.stringify(data);
+  lastHash = snapshot;
   if(syncTmr){ clearInterval(syncTmr); syncTmr=null; }
-  // Always get fresh SHA before writing
-  return leer().then(function(d) {
-    return guardarGH(data);
-  }).then(function(){
+  return guardarGH(data).then(function(){
     syncTmr = setInterval(sync, 8000);
   }).catch(function(){
     syncTmr = setInterval(sync, 8000);
