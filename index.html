@@ -427,7 +427,8 @@ function renderTable(){
       '<td style="color:var(--muted)">'+s.sol+'</td>'+
       '<td><div class="avc"><div class="av" style="background:'+gb(s.asi)+';color:'+gc(s.asi)+'">'+gi(s.asi)+'</div>'+s.asi+'</div></td>'+
       '<td><span class="pr" style="background:'+pc(s.pri)+'"></span>'+(s.pri||'Media')+'</td>'+
-      '<td><span class="badge '+bk(s.est)+'">'+s.est+'</span></td>'+
+      '<td><select class="est-sel" data-id="'+sid+'" onchange="cambiarEstado(this)"><option value="Pendiente"'+(s.est==="Pendiente"?' selected':'')+'>Pendiente</option><option value="En revision"'+(s.est==="En revision"?' selected':'')+'>En revision</option><option value="Completado"'+(s.est==="Completado"?' selected':'')+'>Completado</option></select></td>'+
+      '
       '<td>'+fl2(s.fec)+'</td>'+
       '<td><button class="ab an" data-id="'+sid+'" onclick="abrirNotas(this.dataset.id)">'+(nt?'&#128221;':'&#128196;')+'</button></td>'+
       '<td><div class="acts">'+
@@ -436,6 +437,11 @@ function renderTable(){
       '</div></td></tr>');
   }
   tb.innerHTML=rows.join('');
+  document.querySelectorAll('.est-sel').forEach(function(sel){
+    var c={'Pendiente':{bg:'#fff8e6',color:'#b8860b'},'En revision':{bg:'#f0eeff',color:'#6c5ce7'},'Completado':{bg:'#e0f9f4',color:'#007a5e'}};
+    var s2=c[sel.value]||{bg:'#f5f6fa',color:'#8b92a9'};
+    sel.style.cssText='background:'+s2.bg+';color:'+s2.color+';border:none;border-radius:20px;padding:4px 10px;font-size:.78rem;font-weight:600;cursor:pointer;outline:none;appearance:none;';
+  });
 }
 function clickAct(el){pedirCod(el.getAttribute('data-tp'),el.getAttribute('data-id'));}
 function renderKanban(){
