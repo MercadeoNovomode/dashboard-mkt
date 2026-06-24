@@ -428,7 +428,6 @@ function renderTable(){
       '<td><div class="avc"><div class="av" style="background:'+gb(s.asi)+';color:'+gc(s.asi)+'">'+gi(s.asi)+'</div>'+s.asi+'</div></td>'+
       '<td><span class="pr" style="background:'+pc(s.pri)+'"></span>'+(s.pri||'Media')+'</td>'+
       '<td><select class="est-sel" data-id="'+sid+'" onchange="cambiarEstado(this)"><option value="Pendiente"'+(s.est==="Pendiente"?' selected':'')+'>Pendiente</option><option value="En revision"'+(s.est==="En revision"?' selected':'')+'>En revision</option><option value="Completado"'+(s.est==="Completado"?' selected':'')+'>Completado</option></select></td>'+
-      '
       '<td>'+fl2(s.fec)+'</td>'+
       '<td><button class="ab an" data-id="'+sid+'" onclick="abrirNotas(this.dataset.id)">'+(nt?'&#128221;':'&#128196;')+'</button></td>'+
       '<td><div class="acts">'+
