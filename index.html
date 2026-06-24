@@ -452,7 +452,7 @@ function guardar(){
   var btn=document.getElementById("btnT");btn.textContent="Guardando...";
   var nv={id:Date.now(),tit:tit,mar:mar,sol:sol,asi:asi,est:est,pri:pri,obs:obs,fec:fec,fecha:new Date().toLocaleDateString("es-EC",{day:"2-digit",month:"2-digit",year:"numeric"})};
   SOL.unshift(nv);renderAll();cerrarModal();
-  saveRemote().then(function(){btn.textContent="Guardar";});
+  saveRemote().then(function(){btn.textContent="Guardar";enviarCorreo(nv);});
 }
 function verTit(id){
   var s=SOL.filter(function(x){return String(x.id)===String(id);})[0];if(!s)return;
@@ -510,6 +510,19 @@ function doArchivar(id){
   item.far=new Date().toLocaleDateString("es-EC",{day:"2-digit",month:"2-digit",year:"numeric"});
   SOL.splice(idx,1);ARC.push(item);renderAll();
   saveRemote().then(function(){toast("Tarea archivada","ok");});
+}
+function enviarCorreo(s){
+  var m=EQ.filter(function(e){return e.n===s.asi;})[0];if(!m)return;
+  var ff=s.fec?new Date(s.fec+"T00:00:00").toLocaleDateString("es-EC",{weekday:"long",day:"2-digit",month:"long",year:"numeric"}):"Sin fecha";
+  var ob=s.obs?"\n\nObservaciones:\n"+s.obs:"";
+  var su=encodeURIComponent("[MKT Novomode] Nueva tarea: "+s.tit);
+  var bo=encodeURIComponent("Hola "+s.asi+",\n\nSe te asigno una nueva tarea.\n\nTitulo: "+s.tit+"\nMarca: "+s.mar+"\nSolicitante: "+s.sol+"\nEstado: "+s.est+"\nPrioridad: "+s.pri+"\nFecha: "+ff+ob+"\n\nSaludos,\nEquipo Marketing - Novomode");
+  var a=document.createElement("a");
+  a.href="mailto:"+m.e+"?subject="+su+"&body="+bo;
+  a.style.display="none";
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function(){document.body.removeChild(a);},500);
 }
 var _t;
 function toast(msg,tp){
