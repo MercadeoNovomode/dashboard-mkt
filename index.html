@@ -74,7 +74,11 @@ tr:hover td{background:#fafbff;}
 .pr{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px;}
 .ttc{max-width:180px;}.ttt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:170px;display:block;cursor:pointer;font-weight:600;}
 .ttt:hover{color:var(--violet);text-decoration:underline;}
-.fv{font-size:.78rem;white-space:nowrap;}.fv.vc{color:var(--red);font-weight:600;}.fv.hoy{color:var(--orange);font-weight:600;}.fv.px{color:#b8860b;}.fv.ok{color:var(--muted);}
+.fv{font-size:.78rem;white-space:nowrap;}
+.est-sel{border:none;cursor:pointer;font-size:.78rem;font-weight:600;border-radius:20px;padding:4px 10px;outline:none;appearance:none;-webkit-appearance:none;}
+.est-sel option[value="Pendiente"]{background:#fff8e6;}
+.est-sel option[value="En revision"]{background:#f0eeff;}
+.est-sel option[value="Completado"]{background:#e0f9f4;}.fv.vc{color:var(--red);font-weight:600;}.fv.hoy{color:var(--orange);font-weight:600;}.fv.px{color:#b8860b;}.fv.ok{color:var(--muted);}
 .acts{display:flex;gap:4px;}
 .ab{background:none;border:none;cursor:pointer;padding:5px 7px;border-radius:6px;font-size:.9rem;color:var(--muted);transition:all .15s;}
 .ab:hover{background:var(--bg);}
@@ -489,6 +493,17 @@ function renderSeccion(sec, asignados) {
       '</div></td></tr>');
   }
   tbody.innerHTML=rows.join('');
+}
+
+function cambiarEstado(sel) {
+  var id = sel.getAttribute("data-id");
+  var nuevoEst = sel.value;
+  var idx = -1;
+  SOL.forEach(function(x,i){ if(String(x.id)===String(id)) idx=i; });
+  if(idx===-1) return;
+  SOL[idx].est = nuevoEst;
+  renderAll();
+  saveRemote().then(function(){ toast("Estado actualizado","ok"); });
 }
 
 function actualizarBadgesSecciones() {
