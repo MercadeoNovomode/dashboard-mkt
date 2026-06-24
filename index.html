@@ -130,9 +130,15 @@ tr:hover td{background:#fafbff;}
 <div class="layout">
 <aside class="sb">
   <div class="sb-logo"><div class="brand">Novo<span>mode</span></div><div class="sub">Marketing</div></div>
-  <div class="nav-sec">Workspace</div>
-  <div class="ni active" id="nav-solicitudes" onclick="showPage('solicitudes')">&#128203; Solicitudes <span class="nb" id="nbp">0</span></div>
+  <div class="nav-sec">General</div>
+  <div class="ni active" id="nav-solicitudes" onclick="showPage('solicitudes')">&#128203; Todas <span class="nb" id="nbp">0</span></div>
   <div class="ni" id="nav-archivadas" onclick="showPage('archivadas')">&#128452; Archivadas</div>
+  <div class="nav-sec">Equipos</div>
+  <div class="ni" id="nav-diseno" onclick="showPage('diseno')">&#127912; Diseño <span class="nb" id="nbDiseno">0</span></div>
+  <div class="ni" id="nav-digital" onclick="showPage('digital')">&#128187; Digital <span class="nb" id="nbDigital">0</span></div>
+  <div class="ni" id="nav-trade" onclick="showPage('trade')">&#128200; Trade <span class="nb" id="nbTrade">0</span></div>
+  <div class="ni" id="nav-mkt" onclick="showPage('mkt')">&#127775; MKT <span class="nb" id="nbMkt">0</span></div>
+  <div class="nav-sec">Más</div>
   <div class="ni" id="nav-equipo" onclick="showPage('equipo')">&#128101; Equipo</div>
   <div class="sync"><div class="sd sy" id="sd"></div><span id="sl">Conectando...</span></div>
   <div class="sb-ft"><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:50%;background:var(--vl);color:var(--violet);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.75rem">NM</div><div><div style="font-size:.82rem;font-weight:600">Novomode</div><div style="font-size:.72rem;color:var(--muted)">Marketing</div></div></div></div>
@@ -163,6 +169,46 @@ tr:hover td{background:#fafbff;}
   <div id="pg-archivadas" style="display:none">
     <div class="topbar"><div><div class="pg-title">Tareas archivadas</div><div class="pg-sub" id="arsub">--</div></div></div>
     <div class="tc"><table><thead><tr><th>Titulo</th><th>Marca</th><th>Asignado</th><th>Estado</th><th>Fecha</th><th>Archivada el</th></tr></thead><tbody id="tba"></tbody></table></div>
+  </div>
+  <div id="pg-diseno" style="display:none">
+    <div class="topbar"><div><div class="pg-title">&#127912; Diseño</div><div class="pg-sub">Tareas de Joel y Dany</div></div><button class="btn btn-p" onclick="abrirModal()">+ Nueva solicitud</button></div>
+    <div class="stats">
+      <div class="stat"><div class="stat-ic" style="background:var(--vl)">&#128204;</div><div><div class="stat-n" style="color:var(--violet)" id="dsTot">0</div><div class="stat-l">Total</div></div></div>
+      <div class="stat"><div class="stat-ic" style="background:var(--yl)">&#9203;</div><div><div class="stat-n" style="color:#b8860b" id="dsPend">0</div><div class="stat-l">Pendientes</div></div></div>
+      <div class="stat"><div class="stat-ic" style="background:var(--bl)">&#128260;</div><div><div class="stat-n" style="color:var(--blue)" id="dsRev">0</div><div class="stat-l">En revision</div></div></div>
+      <div class="stat"><div class="stat-ic" style="background:var(--gl)">&#9989;</div><div><div class="stat-n" style="color:var(--green)" id="dsComp">0</div><div class="stat-l">Completadas</div></div></div>
+    </div>
+    <div class="tc"><table><thead><tr><th>Titulo</th><th>Marca</th><th>Solicitante</th><th>Asignado</th><th>Prioridad</th><th>Estado</th><th>Fecha</th><th>Obs</th><th>Acciones</th></tr></thead><tbody id="tbDiseno"></tbody></table></div>
+  </div>
+  <div id="pg-digital" style="display:none">
+    <div class="topbar"><div><div class="pg-title">&#128187; Digital</div><div class="pg-sub">Tareas de Javier</div></div><button class="btn btn-p" onclick="abrirModal()">+ Nueva solicitud</button></div>
+    <div class="stats">
+      <div class="stat"><div class="stat-ic" style="background:var(--vl)">&#128204;</div><div><div class="stat-n" style="color:var(--violet)" id="dgTot">0</div><div class="stat-l">Total</div></div></div>
+      <div class="stat"><div class="stat-ic" style="background:var(--yl)">&#9203;</div><div><div class="stat-n" style="color:#b8860b" id="dgPend">0</div><div class="stat-l">Pendientes</div></div></div>
+      <div class="stat"><div class="stat-ic" style="background:var(--bl)">&#128260;</div><div><div class="stat-n" style="color:var(--blue)" id="dgRev">0</div><div class="stat-l">En revision</div></div></div>
+      <div class="stat"><div class="stat-ic" style="background:var(--gl)">&#9989;</div><div><div class="stat-n" style="color:var(--green)" id="dgComp">0</div><div class="stat-l">Completadas</div></div></div>
+    </div>
+    <div class="tc"><table><thead><tr><th>Titulo</th><th>Marca</th><th>Solicitante</th><th>Asignado</th><th>Prioridad</th><th>Estado</th><th>Fecha</th><th>Obs</th><th>Acciones</th></tr></thead><tbody id="tbDigital"></tbody></table></div>
+  </div>
+  <div id="pg-trade" style="display:none">
+    <div class="topbar"><div><div class="pg-title">&#128200; Trade</div><div class="pg-sub">Tareas de Isa</div></div><button class="btn btn-p" onclick="abrirModal()">+ Nueva solicitud</button></div>
+    <div class="stats">
+      <div class="stat"><div class="stat-ic" style="background:var(--vl)">&#128204;</div><div><div class="stat-n" style="color:var(--violet)" id="trTot">0</div><div class="stat-l">Total</div></div></div>
+      <div class="stat"><div class="stat-ic" style="background:var(--yl)">&#9203;</div><div><div class="stat-n" style="color:#b8860b" id="trPend">0</div><div class="stat-l">Pendientes</div></div></div>
+      <div class="stat"><div class="stat-ic" style="background:var(--bl)">&#128260;</div><div><div class="stat-n" style="color:var(--blue)" id="trRev">0</div><div class="stat-l">En revision</div></div></div>
+      <div class="stat"><div class="stat-ic" style="background:var(--gl)">&#9989;</div><div><div class="stat-n" style="color:var(--green)" id="trComp">0</div><div class="stat-l">Completadas</div></div></div>
+    </div>
+    <div class="tc"><table><thead><tr><th>Titulo</th><th>Marca</th><th>Solicitante</th><th>Asignado</th><th>Prioridad</th><th>Estado</th><th>Fecha</th><th>Obs</th><th>Acciones</th></tr></thead><tbody id="tbTrade"></tbody></table></div>
+  </div>
+  <div id="pg-mkt" style="display:none">
+    <div class="topbar"><div><div class="pg-title">&#127775; MKT</div><div class="pg-sub">Tareas de Cami y Feli</div></div><button class="btn btn-p" onclick="abrirModal()">+ Nueva solicitud</button></div>
+    <div class="stats">
+      <div class="stat"><div class="stat-ic" style="background:var(--vl)">&#128204;</div><div><div class="stat-n" style="color:var(--violet)" id="mkTot">0</div><div class="stat-l">Total</div></div></div>
+      <div class="stat"><div class="stat-ic" style="background:var(--yl)">&#9203;</div><div><div class="stat-n" style="color:#b8860b" id="mkPend">0</div><div class="stat-l">Pendientes</div></div></div>
+      <div class="stat"><div class="stat-ic" style="background:var(--bl)">&#128260;</div><div><div class="stat-n" style="color:var(--blue)" id="mkRev">0</div><div class="stat-l">En revision</div></div></div>
+      <div class="stat"><div class="stat-ic" style="background:var(--gl)">&#9989;</div><div><div class="stat-n" style="color:var(--green)" id="mkComp">0</div><div class="stat-l">Completadas</div></div></div>
+    </div>
+    <div class="tc"><table><thead><tr><th>Titulo</th><th>Marca</th><th>Solicitante</th><th>Asignado</th><th>Prioridad</th><th>Estado</th><th>Fecha</th><th>Obs</th><th>Acciones</th></tr></thead><tbody id="tbMkt"></tbody></table></div>
   </div>
   <div id="pg-equipo" style="display:none">
     <div class="topbar"><div><div class="pg-title">Equipo Marketing</div><div class="pg-sub">6 personas</div></div></div>
@@ -334,6 +380,7 @@ function renderAll(){
   var p=SOL.filter(function(s){return s.est==="Pendiente";}).length;
   document.getElementById("nbp").textContent=p;
   document.getElementById("pgsub").textContent=SOL.length+" solicitudes - "+p+" pendiente"+(p!==1?"s":"");
+  actualizarBadgesSecciones();
 }
 function renderStats(){
   document.getElementById("stt").textContent=SOL.length;
@@ -415,6 +462,44 @@ function renderArc(){
       '<td style="color:var(--muted);font-size:.78rem">'+(s.far||'--')+'</td></tr>';
   }).join('');
 }
+function renderSeccion(sec, asignados) {
+  var prefix = {diseno:"ds",digital:"dg",trade:"tr",mkt:"mk"}[sec];
+  var list = SOL.filter(function(s){return asignados.indexOf(s.asi)!==-1;});
+  document.getElementById(prefix+"Tot").textContent  = list.length;
+  document.getElementById(prefix+"Pend").textContent = list.filter(function(s){return s.est==="Pendiente";}).length;
+  document.getElementById(prefix+"Rev").textContent  = list.filter(function(s){return s.est==="En revision";}).length;
+  document.getElementById(prefix+"Comp").textContent = list.filter(function(s){return s.est==="Completado";}).length;
+  var tbody = document.getElementById("tb"+sec.charAt(0).toUpperCase()+sec.slice(1));
+  if(!list.length){tbody.innerHTML='<tr><td colspan="9"><div class="empty"><div class="ei">&#128219;</div><p>No hay solicitudes</p></div></td></tr>';return;}
+  var rows=[];
+  for(var i=0;i<list.length;i++){
+    var s=list[i],sid=String(s.id),nt=s.obs&&s.obs.trim().length>0;
+    rows.push('<tr>'+
+      '<td class="ttc"><span class="ttt" data-id="'+sid+'" onclick="verTit(this.dataset.id)">'+s.tit+'</span></td>'+
+      '<td><span style="background:var(--bg);padding:3px 10px;border-radius:20px;font-size:.78rem">'+(s.mar||'--')+'</span></td>'+
+      '<td style="color:var(--muted)">'+s.sol+'</td>'+
+      '<td><div class="avc"><div class="av" style="background:'+gb(s.asi)+';color:'+gc(s.asi)+'">'+gi(s.asi)+'</div>'+s.asi+'</div></td>'+
+      '<td><span class="pr" style="background:'+pc(s.pri)+'"></span>'+(s.pri||'Media')+'</td>'+
+      '<td><span class="badge '+bk(s.est)+'">'+s.est+'</span></td>'+
+      '<td>'+fl2(s.fec)+'</td>'+
+      '<td><button class="ab an" data-id="'+sid+'" onclick="abrirNotas(this.dataset.id)">'+(nt?'&#128221;':'&#128196;')+'</button></td>'+
+      '<td><div class="acts">'+
+        '<button class="ab aa" data-id="'+sid+'" data-tp="archivar" onclick="clickAct(this)" title="Archivar">&#128230;</button>'+
+        '<button class="ab ae" data-id="'+sid+'" data-tp="eliminar" onclick="clickAct(this)" title="Eliminar">&#128465;</button>'+
+      '</div></td></tr>');
+  }
+  tbody.innerHTML=rows.join('');
+}
+
+function actualizarBadgesSecciones() {
+  var secciones = {diseno:["Joel","Dany"],digital:["Javier"],trade:["Isa"],mkt:["Cami","Feli"]};
+  Object.keys(secciones).forEach(function(sec){
+    var pend = SOL.filter(function(s){return secciones[sec].indexOf(s.asi)!==-1&&s.est==="Pendiente";}).length;
+    var el = document.getElementById("nb"+sec.charAt(0).toUpperCase()+sec.slice(1));
+    if(el) el.textContent = pend;
+  });
+}
+
 function renderEq(){
   document.getElementById("tg").innerHTML=EQ.map(function(p){
     var cnt=SOL.filter(function(s){return s.asi===p.n;}).length;
@@ -430,9 +515,16 @@ function switchView(i){
   document.getElementById("vt2").classList.toggle("active",i===1);
 }
 function showPage(n){
-  ["solicitudes","archivadas","equipo"].forEach(function(p){document.getElementById("pg-"+p).style.display=p===n?"block":"none";});
+  ["solicitudes","archivadas","diseno","digital","trade","mkt","equipo"].forEach(function(p){
+    var el=document.getElementById("pg-"+p);
+    if(el) el.style.display=p===n?"block":"none";
+  });
   document.querySelectorAll(".ni").forEach(function(el){el.classList.remove("active");});
   document.getElementById("nav-"+n).classList.add("active");
+  if(n==="diseno")renderSeccion("diseno",["Joel","Dany"]);
+  if(n==="digital")renderSeccion("digital",["Javier"]);
+  if(n==="trade")renderSeccion("trade",["Isa"]);
+  if(n==="mkt")renderSeccion("mkt",["Cami","Feli"]);
 }
 function abrirModal(){
   document.getElementById("fFec").value=new Date().toISOString().split("T")[0];
