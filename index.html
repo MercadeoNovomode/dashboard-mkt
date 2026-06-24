@@ -490,11 +490,12 @@ function confCod(){
     document.getElementById("codErr").textContent="Codigo incorrecto";
     document.getElementById("codIn").value="";return;
   }
-  cerrarCod();
-  if(!pendAct)return;
-  if(pendAct.tp==="eliminar")doEliminar(pendAct.id);
-  else doArchivar(pendAct.id);
-  pendAct=null;
+  var accion = pendAct;
+  pendAct = null;
+  document.getElementById("mCod").classList.add("hidden");
+  if(!accion)return;
+  if(accion.tp==="eliminar")doEliminar(accion.id);
+  else doArchivar(accion.id);
 }
 function doEliminar(id){
   var idx=-1;SOL.forEach(function(x,i){if(String(x.id)===String(id))idx=i;});
