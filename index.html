@@ -250,13 +250,20 @@ function leer() {
     }
   }).then(function(r){ return r.json(); }).then(function(d) {
     fileSHA = d.sha;
-    var content = atob(d.content.replace(/\n/g,""));
+    var binary = atob(d.content.replace(/\n/g,""));
+    var bytes = new Uint8Array(binary.length);
+    for(var i=0;i<binary.length;i++) bytes[i] = binary.charCodeAt(i);
+    var content = new TextDecoder().decode(bytes);
     return JSON.parse(content);
   });
 }
 
 function guardarGH(data) {
-  var content = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+  var str = JSON.stringify(data);
+  var bytes = new TextEncoder().encode(str);
+  var binary = "";
+  bytes.forEach(function(b){ binary += String.fromCharCode(b); });
+  var content = btoa(binary);
   return fetch(API, {
     method: "PUT",
     headers: {"Authorization": "token " + GH_TOKEN, "Accept": "application/vnd.github.v3+json", "Content-Type": "application/json"},
