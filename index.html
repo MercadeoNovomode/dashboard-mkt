@@ -257,18 +257,16 @@ function leer() {
 
 function guardarGH(data) {
   var content = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
-  return fetch(API, {
-    method: "PUT",
-    headers: {
-      "Authorization": "token " + GH_TOKEN,
-      "Accept": "application/vnd.github.v3+json",
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      message: "update " + new Date().toISOString(),
-      content: content,
-      sha: fileSHA
-    })
+  // Get fresh SHA first to avoid conflicts
+  return fetch(API + "?t=" + Date.now(), {
+    headers: {"Authorization": "token " + GH_TOKEN, "Accept": "application/vnd.github.v3+json"}
+  }).then(function(r){ return r.json(); }).then(function(meta) {
+    fileSHA = meta.sha;
+    return fetch(API, {
+      method: "PUT",
+      headers: {"Authorization": "token " + GH_TOKEN, "Accept": "application/vnd.github.v3+json", "Content-Type": "application/json"},
+      body: JSON.stringify({message: "update", content: content, sha: fileSHA})
+    });
   }).then(function(r){ return r.json(); }).then(function(d){
     if(d.content) fileSHA = d.content.sha;
   });
@@ -294,9 +292,11 @@ function saveRemote() {
   var data = {solicitudes:SOL, archivadas:ARC};
   lastHash = JSON.stringify(data);
   if(syncTmr){ clearInterval(syncTmr); syncTmr=null; }
-  return guardarGH(data).then(function(){
+  // Always get fresh SHA before writing
+  return leer().then(function(d) {
+    return guardarGH(data);
+  }).then(function(){
     syncTmr = setInterval(sync, 8000);
-    toast("Guardado","ok");
   }).catch(function(){
     syncTmr = setInterval(sync, 8000);
     toast("Error al guardar","er");
@@ -459,16 +459,7 @@ function guardar(){
   var btn=document.getElementById("btnT");btn.textContent="Guardando...";
   var nv={id:Date.now(),tit:tit,mar:mar,sol:sol,asi:asi,est:est,pri:pri,obs:obs,fec:fec,fecha:new Date().toLocaleDateString("es-EC",{day:"2-digit",month:"2-digit",year:"numeric"})};
   SOL.unshift(nv);renderAll();cerrarModal();
-  saveRemote().then(function(){btn.textContent="Guardar";enviarCorreo(nv);});
-}
-function enviarCorreo(s){
-  var m=EQ.filter(function(e){return e.n===s.asi;})[0];if(!m)return;
-  var ff=s.fec?new Date(s.fec+"T00:00:00").toLocaleDateString("es-EC",{weekday:"long",day:"2-digit",month:"long",year:"numeric"}):"Sin fecha";
-  var ob=s.obs?"\n\nObservaciones:\n"+s.obs:"";
-  var su=encodeURIComponent("[MKT Novomode] Nueva tarea: "+s.tit);
-  var bo=encodeURIComponent("Hola "+s.asi+",\n\nSe te asigno una nueva tarea.\n\nTitulo: "+s.tit+"\nMarca: "+s.mar+"\nSolicitante: "+s.sol+"\nEstado: "+s.est+"\nPrioridad: "+s.pri+"\nFecha: "+ff+ob+"\n\nSaludos,\nEquipo Marketing - Novomode");
-  var a=document.createElement("a");a.href="mailto:"+m.e+"?subject="+su+"&body="+bo;a.style.display="none";
-  document.body.appendChild(a);a.click();setTimeout(function(){document.body.removeChild(a);},500);
+  saveRemote().then(function(){btn.textContent="Guardar";});
 }
 function verTit(id){
   var s=SOL.filter(function(x){return String(x.id)===String(id);})[0];if(!s)return;
