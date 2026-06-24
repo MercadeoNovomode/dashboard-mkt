@@ -529,6 +529,20 @@ function toast(msg,tp){
   var el=document.getElementById("toast");el.textContent=msg;el.className="show "+(tp||"ok");
   clearTimeout(_t);_t=setTimeout(function(){el.className="";},3000);
 }
+
+function enviarCorreo(s){
+  var m=EQ.filter(function(e){return e.n===s.asi;})[0];if(!m)return;
+  var ff=s.fec?new Date(s.fec+"T00:00:00").toLocaleDateString("es-EC",{weekday:"long",day:"2-digit",month:"long",year:"numeric"}):"Sin fecha";
+  var ob=s.obs?"\n\nObservaciones:\n"+s.obs:"";
+  var su=encodeURIComponent("[MKT Novomode] Nueva tarea: "+s.tit);
+  var bo=encodeURIComponent("Hola "+s.asi+",\n\nSe te asigno una nueva tarea.\n\nTitulo: "+s.tit+"\nMarca: "+s.mar+"\nSolicitante: "+s.sol+"\nEstado: "+s.est+"\nPrioridad: "+s.pri+"\nFecha: "+ff+ob+"\n\nSaludos,\nEquipo Marketing - Novomode");
+  var a=document.createElement("a");
+  a.href="mailto:"+m.e+"?subject="+su+"&body="+bo;
+  a.style.display="none";
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function(){document.body.removeChild(a);},500);
+}
 start();
 </script>
 </body>
